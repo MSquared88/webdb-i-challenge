@@ -7,12 +7,32 @@ const server = express();
 server.use(express.json());
 
 server.get('/api/accounts', (req, res) => {
-	db.select("*").from('accounts')
-		// db('accounts')
-		.then(accounts => {
-			res.status(200).json(accounts)
-		})
-		.catch(err => res.status(500).json(err))
+	const {limit, sortby, sortdir} = req.query
+	if(limit){
+		db('accounts')	
+			.limit(limit)
+			.then(accounts => {
+				res.status(200).json(accounts)
+			})
+			.catch(err => res.status(500).json(err))
+	}
+	else if(sortby){
+			db('accounts')	
+				.orderBy(sortby, sortdir)
+				.then(accounts => {
+					res.status(200).json(accounts)
+				})
+				.catch(err => res.status(500).json(err))
+	}
+	
+	else{
+		db.select("*").from('accounts')
+			// db('accounts')
+			.then(accounts => {
+				res.status(200).json(accounts)
+			})
+			.catch(err => res.status(500).json(err))
+	}
 })
 
 server.get('/api/accounts/:id', validateAccountId, (req, res) => {
