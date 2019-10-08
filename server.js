@@ -16,13 +16,22 @@ server.get('/api/accounts', (req, res) => {
 			})
 			.catch(err => res.status(500).json(err))
 	}
-	else if(sortby){
+
+	else if(sortby && sortdir){
 			db('accounts')	
 				.orderBy(sortby, sortdir)
 				.then(accounts => {
 					res.status(200).json(accounts)
 				})
 				.catch(err => res.status(500).json(err))
+	}
+	else if(sortby) {
+		db('accounts')	
+		.orderBy(sortby)
+		.then(accounts => {
+			res.status(200).json(accounts)
+		})
+		.catch(err => res.status(500).json(err))
 	}
 	
 	else{
